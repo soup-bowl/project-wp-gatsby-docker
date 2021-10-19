@@ -30,6 +30,16 @@ services:
       WORDPRESS_DB_HOST: db
       WORDPRESS_DB_USER: wp
       WORDPRESS_DB_PASSWORD: password
+  gb:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    #command: gatsby develop -H 0.0.0.0 -p 3000
+    volumes:
+    - ./gatsby:/app
+    ports:
+    - 8081:9000
 volumes:
     wp-persist:
     db-persist:
+    gb-persist:
