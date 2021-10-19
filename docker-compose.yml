@@ -1,0 +1,35 @@
+version: '3.6'
+services:
+  db:
+    image: mariadb:10.6.4
+    volumes:
+    - db-persist:/var/lib/mysql
+    environment:
+      MARIADB_RANDOM_ROOT_PASSWORD: 1
+      MARIADB_USER: wp
+      MARIADB_PASSWORD: password
+      MARIADB_DATABASE: wordpress
+  db_pma:
+    image: phpmyadmin/phpmyadmin:latest
+    depends_on:
+    - db
+    ports:
+    - 8082:80
+    environment:
+      PMA_USER: wp
+      PMA_PASSWORD: password
+  wp:
+    depends_on:
+    - db
+    image: wordpress:latest
+    volumes:
+    - wp-persist:/var/www/html
+    ports:
+    - 8080:80
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: wp
+      WORDPRESS_DB_PASSWORD: password
+volumes:
+    wp-persist:
+    db-persist:
