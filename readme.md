@@ -4,15 +4,9 @@ Creates a local instance of Gatsby, WordPress and MariaDB. **This is an in-progr
 ## Getting Started
 Set `proxy` to `127.0.0.1` in your hosts file. This is to give both your host system and the internal container a unified URL reference, otherwise WordPress will constantly throw it's toys out of the pram during configuration.
 
-Run `gatsby new` to create a Gatsby site called `gatsby` in the www folder.
+At first run, ensure the `www` directory in this folder is empty. Run the `docker-compose up` command to setup the site duo.
 
-```bash
-( cd www && gatsby new gatsby https://github.com/gatsbyjs/gatsby-starter-wordpress-blog )
-```
-
-Now run the `docker-compose up` command to setup the site duo.
-
-Gatsby + WP installation guide: https://github.com/gatsbyjs/gatsby-source-wordpress-experimental/blob/master/docs/getting-started.md
+Gatsby will build in the `www/gatsby` directory with the WordPress variant. Similarly, `www/wordpress` will contain the WordPress installation.
 
 Also, add the following to your wp-config.php (around the 'Happy publishing' mark), otherwise wp-admin will fight you with redirects.
 
@@ -25,16 +19,17 @@ Run through the wp installer. It's buggy - It'll redirect you to the wrong URL, 
 
 Warning: If you try to change permalink structure you will need to rebuild the WordPress instance. God knows why, I've tried both proxy-pass WordPress Apache & FPM WordPress and both have been an absolute nightmare to configure. Anyone with more time to dedicate to learning these specifics please feel free to fork or PR, but I don't have the time to waste away on this nightmare. It's 2021 - it shouldn't be this god-damn difficult to setup proxy routing.
 
+Gatsby + WP installation guide: https://github.com/gatsbyjs/gatsby-source-wordpress-experimental/blob/master/docs/getting-started.md
+
 Install the following plugins on your WordPress instance:
 - GraphQL - https://wordpress.org/plugins/wp-graphql/
 - GatsbyWP - https://wordpress.org/plugins/wp-gatsby/
 
 Once you're happy, set the `gatsby-config.js` to point to http://proxy/wp/graphql and run `gatsby build` on the www/gatsby directory. Run `docker-compose up -d` to check if the Gatsby container is off and restart it, and you should have a Gatsby site working with the content from the WP site.
 
-To update the Gatsby site, run `gatsby build` again.
-
+To update the Gatsby site, restart the GatsbyJS container:
 ```bash
-( cd www && gatsby build )
+docker-compose restart gb
 ```
 
 ## Sites
