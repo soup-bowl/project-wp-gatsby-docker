@@ -1,7 +1,10 @@
-# Gatsby + WordPress, Docker Trial
-Creates a local instance of Gatsby, WordPress and MariaDB.
+# Gatsby + WordPress, Docker Experiment
+Creates a local instance of Gatsby, WordPress and MariaDB. **This is an in-progress experiment, there will be problems**.
 
-To start, run `gatsby new` to create a Gatsby site called `gatsby` in the www folder.
+## Getting Started
+Set `proxy` to `127.0.0.1` in your hosts file. This is to give both your host system and the internal container a unified URL reference, otherwise WordPress will constantly throw it's toys out of the pram during configuration.
+
+Run `gatsby new` to create a Gatsby site called `gatsby` in the www folder.
 
 ```bash
 ( cd www && gatsby new gatsby https://github.com/gatsbyjs/gatsby-starter-wordpress-blog )
@@ -18,9 +21,23 @@ if ( str_contains( $_SERVER['REQUEST_URI'], 'wp-admin' ) ) { $_SERVER['REQUEST_U
 if ( str_contains( $_SERVER['REQUEST_URI'], 'graphql' ) ) { $_SERVER['REQUEST_URI'] = '/wp' . $_SERVER['REQUEST_URI']; }
 ```
 
-And if you try to change permalink structure you will need to rebuild the WordPress instance. God knows why, I've tried both proxy-pass WordPress Apache & FPM WordPress and both have been an absolute nightmare to configure. Anyone with more time to dedicate to learning these specifics please feel free to fork or PR, but I don't have the time to waste away on this nightmare. It's 2021 - it shouldn't be this god-damn difficult to setup proxy routing.
+Run through the wp installer. It's buggy - It'll redirect you to the wrong URL, but go back to http://proxy/wp/wp-admin/installer.php. Once done (you can complete regardless of the broken styling) login to http://proxy/pma, head into wordpress/wp_options, and change both `siteurl` and `home` to add the missing `/wp` bit. 
+
+Warning: If you try to change permalink structure you will need to rebuild the WordPress instance. God knows why, I've tried both proxy-pass WordPress Apache & FPM WordPress and both have been an absolute nightmare to configure. Anyone with more time to dedicate to learning these specifics please feel free to fork or PR, but I don't have the time to waste away on this nightmare. It's 2021 - it shouldn't be this god-damn difficult to setup proxy routing.
+
+Install the following plugins on your WordPress instance:
+- GraphQL - https://wordpress.org/plugins/wp-graphql/
+- GatsbyWP - https://wordpress.org/plugins/wp-gatsby/
+
+Once you're happy, set the `gatsby-config.js` to point to http://proxy/wp/graphql and run `gatsby build` on the www/gatsby directory. Run `docker-compose up -d` to check if the Gatsby container is off and restart it, and you should have a Gatsby site working with the content from the WP site.
+
+To update the Gatsby site, run `gatsby build` again.
+
+```bash
+( cd www && gatsby build )
+```
 
 ## Sites
-* Gatsby runs on http://localhost.
-* WordPress runs on http://localhost/wp.
-* phpMyAdmin accessible via http://localhost/pma.
+* Gatsby runs on http://proxy.
+* WordPress runs on http://proxy/wp.
+* phpMyAdmin accessible via http://proxy/pma.
