@@ -23,7 +23,7 @@ services:
     depends_on:
     - db
     volumes:
-    - ./wp:/var/www/html
+    - ./www/wordpress:/var/www/html
     environment:
       WORDPRESS_DB_HOST: db
       WORDPRESS_DB_USER: wp
@@ -36,7 +36,7 @@ services:
     - wp
     #command: gatsby develop -H 0.0.0.0 -p 3000
     volumes:
-    - ./gatsby:/app
+    - ./www/gatsby:/app
   proxy:
     image: nginx:mainline-alpine
     depends_on:
