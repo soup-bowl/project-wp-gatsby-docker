@@ -4,7 +4,7 @@ Creates a local instance of Gatsby, WordPress and MariaDB. **This is an in-progr
 ## Getting Started
 Set `proxy` to `127.0.0.1` in your hosts file. This is to give both your host system and the internal container a unified URL reference, otherwise WordPress will constantly throw it's toys out of the pram during configuration.
 
-At first run, ensure the `www` directory in this folder is empty. Run the `docker-compose up` command to setup the site duo.
+At first run, ensure the `www` directory in this folder is empty. Run the `docker-compose up --build -d` command to setup the site duo.
 
 Gatsby will build in the `www/gatsby` directory with the WordPress variant. Similarly, `www/wordpress` will contain the WordPress installation.
 
