@@ -5,7 +5,6 @@ To start, run `gatsby new` to create a Gatsby site called `gatsby`.
 
 ```
 gatsby new gatsby https://github.com/gatsbyjs/gatsby-starter-wordpress-blog
-
 ```
 
 Now run the `docker-compose up` command to setup the site duo.
