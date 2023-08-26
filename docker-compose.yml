@@ -2,6 +2,10 @@ version: '3.6'
 services:
   db:
     image: mariadb:10.6.4
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 5
     volumes:
     - db-persist:/var/lib/mysql
     environment:
@@ -10,9 +14,11 @@ services:
       MARIADB_PASSWORD: password
       MARIADB_DATABASE: wordpress
   db_pma:
-    image: phpmyadmin/phpmyadmin:latest
+    image: phpmyadmin:latest
     depends_on:
     - db
+    ports:
+      - 8080:80
     environment:
       PMA_USER: wp
       PMA_PASSWORD: password
@@ -21,7 +27,8 @@ services:
       context: ./docker
       dockerfile: WordPress.Dockerfile
     depends_on:
-    - db
+      db:
+        condition: service_healthy
     volumes:
     - ./www/wordpress:/var/www/html
     environment:
@@ -33,10 +40,13 @@ services:
       context: ./docker
       dockerfile: Gatsby.Dockerfile
     depends_on:
-    - wp
+      wp:
+        condition: service_started
     #command: gatsby develop -H 0.0.0.0 -p 3000
     volumes:
     - ./www/gatsby:/app
+    ports:
+    - 9000:9000
   proxy:
     image: nginx:mainline-alpine
     depends_on:
